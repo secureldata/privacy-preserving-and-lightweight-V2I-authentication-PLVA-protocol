@@ -27,8 +27,7 @@ public class BGNEncryption {
 		rng = new SecureRandom();
 		TypeA1CurveGenerator a1 = new TypeA1CurveGenerator(rng, 2, bits); // Requires
 		// 2
-		// prime
-		//typeA1为椭圆曲线，但在不同域上为合数双线性群																	// numbers.
+		// prime																	// numbers.
 		param = a1.generate();
 		TypeA1Pairing pairing = new TypeA1Pairing(param);
 		order = param.getBigInteger("n"); // Must extract the prime numbers for
