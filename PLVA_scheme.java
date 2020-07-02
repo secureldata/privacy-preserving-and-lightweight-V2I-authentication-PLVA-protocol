@@ -196,7 +196,6 @@ public class PLVA_scheme {
 					temp1=b.add(PK,Ematrix[i][j],temp1);//In the BGN add algorithm, it is a multiplication of numbers. Here, the exponentiation is calculated by multiplying times
 					Ematrix[i][j]=temp1;
 				}
-				Ematrix[i][j]=b.add(PK,temp1,b.encrypt(PK,1));
 			}
 
 		}
@@ -218,7 +217,6 @@ public class PLVA_scheme {
 		for(int i=0;i<n;i++)
 		{
 			result[i]=Double.valueOf(b.decryptMul(PK, b.q, resultend[i]));
-			result[i]=result[i]-n;
 			System.out.println("result: " + Math.log(result[i])/Math.log(2));
 		}
 
