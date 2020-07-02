@@ -119,14 +119,11 @@ public class PLVA_scheme {
 		}
 		return m.toString();
 	}
-	public double log2(int N) {
-		return Math.log(N)/Math.log(2);//Math.log的底为e
-	}
 	public static void main(String[] args) {
 		PLVA_scheme b = new PLVA_scheme();
 		PublicKey PK = b.gen(256);
 
-		int n=10;
+		int n=10;//Assume the number of RSU
 		int onevalue=0;
 		int key[]=new int[n];
 		int matrix[][]=new int[n][n];
