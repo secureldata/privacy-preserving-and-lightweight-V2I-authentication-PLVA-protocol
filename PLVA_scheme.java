@@ -13,7 +13,7 @@ import org.bouncycastle.jce.provider.JCEMac;
 import org.bouncycastle.jce.provider.symmetric.AES;
 import javax.swing.*;
 import java.lang.Runtime;
-public class BGNEncryption {
+public class PLVA_scheme {
 
 	public static final String start = "start";
 	public static final String end = "end";
@@ -119,19 +119,27 @@ public class BGNEncryption {
 		}
 		return m.toString();
 	}
+	public double log2(int N) {
+		return Math.log(N)/Math.log(2);//Math.log的底为e
+	}
 	public static void main(String[] args) {
-		BGNEncryption b = new BGNEncryption();
+		PLVA_scheme b = new PLVA_scheme();
 		PublicKey PK = b.gen(256);
 
 		int n=10;
 		int onevalue=0;
 		int key[]=new int[n];
 		int matrix[][]=new int[n][n];
+		double  result[]=new double [n];
 		Element Ematrix[][]=new Element[n][n];
 		Element Ekey[]=new Element[n];
 		Element EC[]=new Element[n];
 		Element resultend[]=new Element[n];
 		Element one=b.encrypt(PK,1);
+
+		//###############################################################################################
+
+		//###############################################################################################
 		for(int i=0;i<n;i++)  //Assuming key vector generation
 		{
 			key[i]=i+1;
@@ -183,36 +191,39 @@ public class BGNEncryption {
 		//###############################################################################################
 		//CA gets the encryption matrix and path vector
 		//###############################################################################################
-		
+
 		for(int i=0;i<n;i++) {   //CA receives the encryption matrix and combines the encryption matrix into an encryption vector
 			for (int j = 0, s=0; s < n && j<n; j++,s++) {
-				matrix[i][j]=matrix[i][j]*key[s];
-				if(matrix[i][j]!=0)
-				{
-					int number=matrix[i][j];
-					Ematrix[i][j]=b.encrypt(PK,0);
-					while(number>0)
-					{
-						Ematrix[i][j]=Ematrix[i][j].mul(one);
-						number--;
-					}
-					Ekey[i]=Ematrix[i][j];
+				Element temp1=Ematrix[i][j];
+				for(int k=0;k<key[s];k++){
+					temp1=b.add(PK,Ematrix[i][j],temp1);
+					Ematrix[i][j]=temp1;
 				}
+				Ematrix[i][j]=b.add(PK,temp1,b.encrypt(PK,1));
 			}
 
+		}
+		for(int i=0;i<n;i++) {
+			Element temp3=b.encrypt(PK,0);
+			for (int j = 0; j<n; j++) {
+
+				temp3=b.add(PK,temp3,Ematrix[i][j]);
+			}
+			Ekey[i]=temp3;
 		}
 		for(int i=0;i<n;i++) //Multiply the encrypted vector and the encrypted path vector to the final result vector
 		{
 			resultend[i]=b.mul(PK,EC[i],Ekey[i]);
 		}
-		
 		//###############################################################################################
 		//Vehicle decryption
 		//###############################################################################################
 		for(int i=0;i<n;i++)
 		{
-			
-			b.decryptMul(PK, b.q, resultend[i]);
+			result[i]=Double.valueOf(b.decryptMul(PK, b.q, resultend[i]));
+			result[i]=result[i]-n;
+			System.out.println("result: " + Math.log(result[i])/Math.log(2));
 		}
+
 	}
 }
