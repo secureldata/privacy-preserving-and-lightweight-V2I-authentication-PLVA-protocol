@@ -193,7 +193,7 @@ public class PLVA_scheme {
 			for (int j = 0, s=0; s < n && j<n; j++,s++) {
 				Element temp1=Ematrix[i][j];
 				for(int k=0;k<key[s];k++){
-					temp1=b.add(PK,Ematrix[i][j],temp1);//The exponentiation operation appears as the ADD algorithm in BGN
+					temp1=b.add(PK,Ematrix[i][j],temp1);//In the BGN add algorithm, it is a multiplication of numbers. Here, the exponentiation is calculated by multiplying times
 					Ematrix[i][j]=temp1;
 				}
 				Ematrix[i][j]=b.add(PK,temp1,b.encrypt(PK,1));
@@ -204,7 +204,7 @@ public class PLVA_scheme {
 			Element temp3=b.encrypt(PK,0);
 			for (int j = 0; j<n; j++) {
 
-				temp3=b.add(PK,temp3,Ematrix[i][j]);
+				temp3=b.add(PK,temp3,Ematrix[i][j]);//Here row element multiplication operation, also use add algorithm
 			}
 			Ekey[i]=temp3;
 		}
